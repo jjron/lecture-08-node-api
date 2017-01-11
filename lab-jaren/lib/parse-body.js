@@ -2,7 +2,7 @@
 
 module.exports = function(req) {
   return new Promise((resolve, reject) => {
-    if(!(req.method == 'POST' || req.method == 'PUT')) {
+    if(req.method == 'POST' || req.method == 'PUT') {
       let bodyText = '';
       req.on('data', (buffer) => {
         bodyText += buffer.toString();
@@ -18,6 +18,8 @@ module.exports = function(req) {
           reject(err);
         }
       });
+    } else {
+      resolve();
     }
   });
 };
