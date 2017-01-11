@@ -40,10 +40,9 @@ Your lab directory must include
 * Create a Router Constructor that manages requests to `GET`, `POST`, `PUT`, and `DELETE` requests
 * Create a route for doing `CREATE`, `READ`, and `DELETE` operations on your _resource_
 * Create a storage module that will store resources by their _resource_ type and id
-
-###### `/api/<resources>` 
-* **dont name your endpoint `/api/resources` name it after your model**
-
+  
+**dont name your endpoint `/api/resources` name it after your model**  
+  
 ###### `POST` `/api/<resources>` 
 * pass data as stringifed json in the body of a post request to create a resource
 * if their was no _resource_ with that id it should respond with a 404
