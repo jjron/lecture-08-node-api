@@ -37,11 +37,17 @@ describe('testing /api/games', function() {
         .catch(done);
       });
     });
-    // describe('with invalid body or no body provided', function(){
-    //   it('should respond with bad request') {
-    //
-    //   }
-    // });
+    describe('with invalid body or no body provided', function(){
+      it('should respond with bad request', done => {
+        superagent.post(`${apiURL}/api/games`)
+        .send({})
+        .then(done)
+        .catch(err => {
+          expect(err.status).to.equal(400);
+          done();
+        });
+      });
+    });
   });
 
   describe('testing GET', function() {
@@ -79,17 +85,37 @@ describe('testing /api/games', function() {
       });
     });
 
-    // describe('with invalid input', function() {
-    //   describe('case: no id provided', function() {
-    //     it('should respond with bad request') {
-    //
-    //     }
-    //   });
-    //   describe('case: valid request but id not found', function() {
-    //     it('should respond with not found') {
-    //
-    //     }
-    //   });
-    // });
+    describe('with invalid input', function() {
+      before(done => {
+        this.xcomTwo = new Game({
+          title: 'XCOM 2',
+          genre: 'strategy/tactics',
+          developer: '2K Games, Inc.',
+          publisher: 'Firaxis Games, Inc.',
+          platforms: 'Windows, Linux, Mac, PS4, Xbox One',
+          ratingESRB: 'Teen',
+          releaseDate: 'Feb 05, 2016',
+        });
+        storage.createItem('games', this.xcomTwo)
+        .then(() => done())
+        .catch(done);
+      });
+      it('no id provided should respond with bad request', done => {
+        superagent.get(`${apiURL}/api/games?id=`)
+        .then(done)
+        .catch(err => {
+          expect(err.status).to.equal(400);
+          done();
+        });
+      });
+      it('id not found should respond with not found', done => {
+        superagent.get(`${apiURL}/api/games?id=42`)
+        .then(done)
+        .catch(err => {
+          expect(err.status).to.equal(404);
+          done();
+        });
+      });
+    });
   });
 });

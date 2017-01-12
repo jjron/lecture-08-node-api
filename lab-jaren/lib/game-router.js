@@ -41,9 +41,12 @@ module.exports = function(router) {
       res.end();
     })
     .catch(err => {
-      console.error(err);
       res.statusCode = err.status;
       res.end();
     });
   });
+
+  // router.delete('/api/games', function(req, res) {
+  //
+  // });
 };
