@@ -4,7 +4,7 @@ const expect = require('chai').expect;
 const Game = require('../model/game.js');
 
 describe('testing game constructor', function() {
-  it('should create a game object', function() {
+  it('should create a game object', function(done) {
     let data = {
       title: 'XCOM 2',
       genre: 'strategy/tactics',
@@ -25,5 +25,6 @@ describe('testing game constructor', function() {
     expect(xcomTwo.platforms).to.equal(data.platforms);
     expect(xcomTwo.ratingESRB).to.equal(data.ratingESRB);
     expect(xcomTwo.releaseDate).to.equal(data.releaseDate);
+    done();
   });
 });
