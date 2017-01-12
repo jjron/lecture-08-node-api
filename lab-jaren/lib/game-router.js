@@ -49,21 +49,23 @@ module.exports = function(router) {
   router.delete('/api/games', function(req, res) {
     let id = req.url.query.id;
     if(!id) {
+      let err = new Error('ID does not exist');
+      console.error(err);
       res.statusCode = 400;
       res.end();
-      return;
     }
 
     storage.deleteItem('games', id)
-    .then(res => {
+    .then(() => {
       console.log('item deleted!');
       res.statusCode = 204;
       res.end();
     })
     .catch(err => {
       res.statusCode = err.status;
+      console.log(err);
       res.end();
     });
-    
+
   });
 };
