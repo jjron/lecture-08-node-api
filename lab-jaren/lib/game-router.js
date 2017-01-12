@@ -46,7 +46,24 @@ module.exports = function(router) {
     });
   });
 
-  // router.delete('/api/games', function(req, res) {
-  //
-  // });
+  router.delete('/api/games', function(req, res) {
+    let id = req.url.query.id;
+    if(!id) {
+      res.statusCode = 400;
+      res.end();
+      return;
+    }
+
+    storage.deleteItem('games', id)
+    .then(res => {
+      console.log('item deleted!');
+      res.statusCode = 204;
+      res.end();
+    })
+    .catch(err => {
+      res.statusCode = err.status;
+      res.end();
+    });
+    
+  });
 };
