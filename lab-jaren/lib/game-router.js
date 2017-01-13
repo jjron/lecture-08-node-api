@@ -53,6 +53,7 @@ module.exports = function(router) {
       console.error(err);
       res.statusCode = 400;
       res.end();
+      return;
     }
 
     storage.deleteItem('games', id)
