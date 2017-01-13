@@ -1,9 +1,9 @@
-Lab-08 Node REST API using HTTP module
+Lab-08 & 09 Node REST API using HTTP module and file system storage
 ===
-Implement a rest API
+Implement a rest API and use persistent data
 
 ## Description
-A REST API for games on an HTTP server that users can make POST, GET, PUT, and DELETE requests to with appropriate routes and responses. For this description all distinct game objects are referred to as items.
+A REST API for games on an HTTP server that users can make POST, GET, PUT, and DELETE requests to with appropriate routes and responses. For this description all distinct game objects are referred to as items. The data is persistent because it gets saved in the data directory instead of session memory. This allows data to be accessed between server sessions.
 ##### Modules
 - **server.js** -- starts the server and creates an instance of a router for the games API
 - **game.js** -- item constructor that assigns a unique id to each game and takes user input data for:
