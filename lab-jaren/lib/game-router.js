@@ -5,7 +5,7 @@ const storage = require('../lib/storage.js');
 
 module.exports = function(router) {
   router.post('/api/games', function(req, res) {
-    if(!req.body.title || !req.body.genre || !req.body.developer || !req.body.publisher || !req.body.platforms || !req.body.ratingESRB || !req.body.releaseDate) {
+    if(!req.body.title || !req.body.genre || !req.body.developer) {
       res.statusCode = 400;
       res.end();
       return;
