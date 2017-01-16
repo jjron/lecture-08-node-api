@@ -2,16 +2,23 @@
 
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
+const mkdirp = require('mkdirp-bluebird');
 
 const storage = module.exports = {};
 
 const dataDir = `${__dirname}/../data`;
 
 storage.createItem = function(name, item) {
-  if (!(`${dataDir}/${name}`)) {
-    fs.mkdirAsync(`${dataDir}/${name}`);
-  }
   return fs.statAsync(`${dataDir}/${name}`)
+  .catch(() => {
+    mkdirp(`${dataDir}/${name}`)
+    .then(made => {
+      console.log(made);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  })
   .catch(err => {
     err.status = 400;
     return Promise.reject(err);
@@ -24,13 +31,9 @@ storage.createItem = function(name, item) {
 };
 
 storage.readItem = function(name, id) {
-  if (!(`${dataDir}/${name}`) || !(`${dataDir}/${name}/${id}`)) {
-    let err = new Error('item not found');
-    err.status = 404;
-    return Promise.reject(err);
-  }
   return fs.statAsync(`${dataDir}/${name}/${id}.json`)
   .catch(err => {
+    console.error('item not found');
     err.status = 404;
     return Promise.reject(err);
   })
