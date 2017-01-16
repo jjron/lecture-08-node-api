@@ -9,20 +9,27 @@ const apiURL = `http://localhost:${process.env.PORT || 3000}`;
 require('../server.js');
 
 describe('testing /api/games', function() {
+  let mockData = {
+    title: 'XCOM 2',
+    genre: 'strategy/tactics',
+    developer: '2K Games, Inc.',
+    publisher: 'Firaxis Games, Inc.',
+    platforms: 'Windows, Linux, Mac, PS4, Xbox One',
+    ratingESRB: 'Teen',
+    releaseDate: 'Feb 05, 2016',
+  };
   describe('testing POST', function() {
     describe('with valid input', function() {
-      it('should return a game', done => {
+      after(done => {
+        storage.deleteItem('games', this.toDelete)
+        .then(() => done())
+        .catch(done);
+      });
+      it('should return a game with status 200', done => {
         superagent.post(`${apiURL}/api/games`)
-        .send({
-          title: 'XCOM 2',
-          genre: 'strategy/tactics',
-          developer: '2K Games, Inc.',
-          publisher: 'Firaxis Games, Inc.',
-          platforms: 'Windows, Linux, Mac, PS4, Xbox One',
-          ratingESRB: 'Teen',
-          releaseDate: 'Feb 05, 2016',
-        })
+        .send(mockData)
         .then(res => {
+          this.toDelete = res.body.id;
           expect(res.status).to.equal(200);
           expect(res.body.title).to.equal('XCOM 2');
           expect(res.body.genre).to.equal('strategy/tactics');
@@ -38,7 +45,7 @@ describe('testing /api/games', function() {
       });
     });
     describe('with invalid body or no body provided', function(){
-      it('should respond with bad request', done => {
+      it('should respond with status 400 bad request', done => {
         superagent.post(`${apiURL}/api/games`)
         .send({})
         .then(done)
@@ -53,21 +60,17 @@ describe('testing /api/games', function() {
   describe('testing GET', function() {
     describe('with valid input', function() {
       before(done => {
-        this.xcomTwo = new Game({
-          title: 'XCOM 2',
-          genre: 'strategy/tactics',
-          developer: '2K Games, Inc.',
-          publisher: 'Firaxis Games, Inc.',
-          platforms: 'Windows, Linux, Mac, PS4, Xbox One',
-          ratingESRB: 'Teen',
-          releaseDate: 'Feb 05, 2016',
-        });
+        this.xcomTwo = new Game(mockData);
         storage.createItem('games', this.xcomTwo)
         .then(() => done())
         .catch(done);
       });
-
-      it('should return a game', done => {
+      after(done => {
+        storage.deleteItem('games', this.xcomTwo.id)
+        .then(() => done())
+        .catch(done);
+      });
+      it('should return a game with status 200', done => {
         superagent.get(`${apiURL}/api/games?id=${this.xcomTwo.id}`)
         .then(res => {
           expect(res.status).to.equal(200);
@@ -87,20 +90,17 @@ describe('testing /api/games', function() {
 
     describe('with invalid input', function() {
       before(done => {
-        this.xcomTwo = new Game({
-          title: 'XCOM 2',
-          genre: 'strategy/tactics',
-          developer: '2K Games, Inc.',
-          publisher: 'Firaxis Games, Inc.',
-          platforms: 'Windows, Linux, Mac, PS4, Xbox One',
-          ratingESRB: 'Teen',
-          releaseDate: 'Feb 05, 2016',
-        });
+        this.xcomTwo = new Game(mockData);
         storage.createItem('games', this.xcomTwo)
         .then(() => done())
         .catch(done);
       });
-      it('no id provided should respond with bad request', done => {
+      after(done => {
+        storage.deleteItem('games', this.xcomTwo.id)
+        .then(() => done())
+        .catch(done);
+      });
+      it('no id provided should respond with status 400 bad request', done => {
         superagent.get(`${apiURL}/api/games?id=`)
         .then(done)
         .catch(err => {
@@ -108,8 +108,57 @@ describe('testing /api/games', function() {
           done();
         });
       });
-      it('id not found should respond with not found', done => {
+      it('id not found should respond with status 404 not found', done => {
         superagent.get(`${apiURL}/api/games?id=42`)
+        .then(done)
+        .catch(err => {
+          expect(err.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('testing DELETE', function() {
+    describe('with valid input', function() {
+      before(done => {
+        this.xcomTwo = new Game(mockData);
+        storage.createItem('games', this.xcomTwo)
+        .then(() => done())
+        .catch(done);
+      });
+      it('should delete item and respond with 204 no content', done => {
+        superagent.delete(`${apiURL}/api/games?id=${this.xcomTwo.id}`)
+        .then(res => {
+          expect(res.statusCode).to.equal(204);
+          done();
+        })
+        .catch(done);
+      });
+    });
+    describe('with invalid input', function() {
+      before(done => {
+        this.xcomTwo = new Game(mockData);
+        storage.createItem('games', this.xcomTwo)
+        .then(() => done())
+        .catch(done);
+      });
+      /* Actually delete after invalid delete tests */
+      after(done => {
+        storage.deleteItem('games', this.xcomTwo.id)
+        .then(() => done())
+        .catch(done);
+      });
+      it('no id provided should responde with status 400 bad request', done => {
+        superagent.delete(`${apiURL}/api/games?id=`)
+        .then(done)
+        .catch(err => {
+          expect(err.status).to.equal(400);
+          done();
+        });
+      });
+      it('id not found should respond with status 404 not found', done => {
+        superagent.delete(`${apiURL}/api/games?id=42`)
         .then(done)
         .catch(err => {
           expect(err.status).to.equal(404);

@@ -7,9 +7,9 @@ A REST API for games on an HTTP server that users can make POST, GET, PUT, and D
 ##### Modules
 - **server.js** -- starts the server and creates an instance of a router for the games API
 - **game.js** -- item constructor that assigns a unique id to each game and takes user input data for:
-  - title
-  - genre
-  - developer
+  - title ** required for POST*
+  - genre ** required for POST*
+  - developer ** required for POST*
   - publisher
   - platforms
   - ESRB rating
