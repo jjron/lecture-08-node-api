@@ -1,0 +1,28 @@
+{
+  "name": "lab-jaren",
+  "version": "1.0.0",
+  "description": "lab-08 http rest api and router",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "watch": "./node_modules/nodemon/bin/nodemon.js server.js",
+    "test": "./node_modules/mocha/bin/mocha",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "mkdirp-bluebird": "^1.2.1",
+    "node-uuid": "^1.4.7"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0",
+    "superagent": "^3.3.2"
+  }
+}
