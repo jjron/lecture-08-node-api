@@ -16,7 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.4.7",
-    "mkdirp-bluebird": "^1.2.1",
     "node-uuid": "^1.4.7"
   },
   "devDependencies": {

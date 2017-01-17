@@ -2,7 +2,6 @@
 
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
-const mkdirp = require('mkdirp-bluebird');
 
 const storage = module.exports = {};
 
@@ -11,12 +10,13 @@ const dataDir = `${__dirname}/../data`;
 storage.createItem = function(name, item) {
   return fs.statAsync(`${dataDir}/${name}`)
   .catch(() => {
-    mkdirp(`${dataDir}/${name}`)
-    .then(made => {
-      console.log(made);
+    fs.mkdirAsync(`${dataDir}/${name}`)
+    .then(() => {
+      return Promise.resolve();
     })
     .catch(err => {
       console.error(err);
+      return Promise.reject(err);
     });
   })
   .catch(err => {
